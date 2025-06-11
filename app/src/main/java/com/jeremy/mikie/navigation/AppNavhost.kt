@@ -12,14 +12,19 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.jeremy.mikie.data.UserDatabase
 import com.jeremy.mikie.model.OrderViewModel
+import com.jeremy.mikie.register.LoginScreen
+import com.jeremy.mikie.register.RegisterScreen
 import com.jeremy.mikie.repository.UserRepository
 import com.jeremy.mikie.ui.screens.about.AboutScreen
+import com.jeremy.mikie.ui.screens.admin.AdminOrderConfirmationScreen
+
 import com.jeremy.mikie.ui.screens.home.HomeScreen
 
 import com.jeremy.mikie.ui.screens.order.OderScreen
 
 import com.jeremy.mikie.ui.screens.saved.SavedOrdersScreen
 import com.jeremy.mikie.ui.screens.splash.SplashScreen
+import com.jeremy.mikie.viewmodel.AuthViewModel
 
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -53,6 +58,34 @@ fun AppNavHost(
         composable(ROUT_SPLASH) {
             SplashScreen(navController = navController)
         }
+        composable(ROUT_ADMIN_ORDERS) {
+            AdminOrderConfirmationScreen(navController)
+        }
+        // Initialize Room Database and Repository for Authentication
+        val appDatabase = UserDatabase.getDatabase(context)
+        val authRepository = UserRepository(appDatabase.userDao())
+        val authViewModel: AuthViewModel = AuthViewModel(authRepository)
+        composable(ROUT_REGISTER) {
+            RegisterScreen(authViewModel, navController) {
+                navController.navigate(ROUT_LOGIN) {
+                    popUpTo(ROUT_REGISTER) { inclusive = true }
+                }
+            }
+        }
+
+        composable(ROUT_LOGIN) {
+            LoginScreen(authViewModel, navController) {
+                navController.navigate(ROUT_HOME) {
+                    popUpTo(ROUT_LOGIN) { inclusive = true }
+                }
+            }
+        }
+
+
+
+
+
+
 
     }
 }

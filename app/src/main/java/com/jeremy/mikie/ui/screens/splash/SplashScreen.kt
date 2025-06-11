@@ -21,6 +21,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.jeremy.mikie.R
 import com.jeremy.mikie.navigation.ROUT_HOME
+import com.jeremy.mikie.navigation.ROUT_LOGIN
+import com.jeremy.mikie.navigation.ROUT_REGISTER
 import com.jeremy.mikie.ui.theme.Green
 import com.jeremy.mikie.ui.theme.Orange
 import kotlinx.coroutines.delay
@@ -32,7 +34,7 @@ fun SplashScreen(navController: NavController) {
     val coroutine = rememberCoroutineScope()
     coroutine.launch {
         delay(2000)
-        navController.navigate(ROUT_HOME)
+        navController.navigate(ROUT_LOGIN)
     }
     //end of navigate
 

@@ -57,6 +57,7 @@ import com.jeremy.mikie.navigation.ROUT_HOME
 import com.jeremy.mikie.R
 import com.jeremy.mikie.model.FoodItem
 import com.jeremy.mikie.model.OrderViewModel
+import com.jeremy.mikie.navigation.ROUT_ADMIN_ORDERS
 import com.jeremy.mikie.navigation.ROUT_ORDER
 import com.jeremy.mikie.navigation.ROUT_SAVED
 
@@ -200,7 +201,7 @@ fun FoodItemCard(
 
             Button(onClick = {
                 onSelect(item)
-                navController.navigate(ROUT_SAVED)
+                navController.navigate(ROUT_ADMIN_ORDERS)
             }) {
                 Text("Add")
             }
