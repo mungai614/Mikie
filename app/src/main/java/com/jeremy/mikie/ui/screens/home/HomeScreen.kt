@@ -17,8 +17,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -48,6 +50,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.jeremy.mikie.navigation.ROUT_HOME
 import com.jeremy.mikie.R
+import com.jeremy.mikie.navigation.ROUT_ORDER
+import com.jeremy.mikie.navigation.ROUT_SAVED
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,12 +64,7 @@ fun HomeScreen(navController: NavController){
         //TopBar
         topBar = {
             TopAppBar(
-                title = { Text("Back") },
-                navigationIcon = {
-                    IconButton(onClick = { /* Handle back/nav */ }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                },
+                title = { Text("what we offer!!") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Red,
                     titleContentColor = Color.White,
@@ -80,29 +79,32 @@ fun HomeScreen(navController: NavController){
                 containerColor = Color.Red
             ){
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Search, contentDescription = "Home") },
-                    label = { Text("search") },
+                    icon = { Icon(Icons.Default.ShoppingCart, contentDescription = "Home") },
+                    label = { Text("order") },
                     selected = selectedIndex == 0,
                     onClick = { selectedIndex = 0
+                        navController.navigate(ROUT_ORDER)
+                    }
+                )
+
+                NavigationBarItem(
+                    icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
+                    label = { Text("Saved Orders") },
+                    selected = selectedIndex == 2,
+                    onClick = { selectedIndex = 2
+                          navController.navigate(ROUT_SAVED)
+                    }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Default.Home, contentDescription = "Search") },
+                    label = { Text("Home") },
+                    selected = selectedIndex == 0,
+                    onClick = {
+                        selectedIndex = 0
                         navController.navigate(ROUT_HOME)
                     }
                 )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.Favorite, contentDescription = "Favorites") },
-                    label = { Text("Favorites") },
-                    selected = selectedIndex == 1,
-                    onClick = { selectedIndex = 1
-                        // navController.navigate(ROUT_HOME)
-                    }
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
-                    label = { Text("Profile") },
-                    selected = selectedIndex == 2,
-                    onClick = { selectedIndex = 2
-                        //  navController.navigate(ROUT_HOME)
-                    }
-                )
+
 
             }
         },

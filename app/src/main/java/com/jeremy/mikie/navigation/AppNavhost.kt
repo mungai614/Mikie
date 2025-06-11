@@ -10,33 +10,49 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.jeremy.mikie.data.UserDatabase
+import com.jeremy.mikie.model.OrderViewModel
+import com.jeremy.mikie.repository.UserRepository
 import com.jeremy.mikie.ui.screens.about.AboutScreen
+import com.jeremy.mikie.ui.screens.home.HomeScreen
+
+import com.jeremy.mikie.ui.screens.order.OderScreen
+
+import com.jeremy.mikie.ui.screens.saved.SavedOrdersScreen
+import com.jeremy.mikie.ui.screens.splash.SplashScreen
+
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ROUT_HOME,
-
+    startDestination: String = ROUT_SPLASH
 ) {
     val context = LocalContext.current
+    val orderViewModel: OrderViewModel = viewModel()
+
 
     NavHost(
         navController = navController,
         startDestination = startDestination,
         modifier = modifier
     ) {
+        composable(ROUT_ORDER) {
+            OderScreen(orderViewModel = orderViewModel, navController = navController)
+        }
+        composable(ROUT_SAVED) {
+            SavedOrdersScreen(orderViewModel = orderViewModel, navController = navController)
+        }
         composable(ROUT_HOME) {
-            Homescreen(navController)
+            HomeScreen(navController = navController)
         }
         composable(ROUT_ABOUT) {
-            AboutScreen(navController)
+            AboutScreen(navController = navController)
         }
-    }
-}
+        composable(ROUT_SPLASH) {
+            SplashScreen(navController = navController)
+        }
 
-@Composable
-fun Homescreen(x0: NavHostController) {
-    TODO("Not yet implemented")
+    }
 }
