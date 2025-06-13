@@ -1,5 +1,6 @@
 package com.jeremy.mikie.navigation
 
+import SaveOrderScreen2
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -17,10 +18,11 @@ import com.jeremy.mikie.register.RegisterScreen
 import com.jeremy.mikie.repository.UserRepository
 import com.jeremy.mikie.ui.screens.about.AboutScreen
 import com.jeremy.mikie.ui.screens.admin.AdminOrderConfirmationScreen
+import com.jeremy.mikie.ui.screens.admin.OrderConfirmationScreen
 
 import com.jeremy.mikie.ui.screens.home.HomeScreen
+import com.jeremy.mikie.ui.screens.order.OrderScreen
 
-import com.jeremy.mikie.ui.screens.order.OderScreen
 
 import com.jeremy.mikie.ui.screens.saved.SavedOrdersScreen
 import com.jeremy.mikie.ui.screens.splash.SplashScreen
@@ -32,7 +34,7 @@ import com.jeremy.mikie.viewmodel.AuthViewModel
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ROUT_SPLASH
+    startDestination: String = ROUT_ORDER
 ) {
     val context = LocalContext.current
     val orderViewModel: OrderViewModel = viewModel()
@@ -44,7 +46,7 @@ fun AppNavHost(
         modifier = modifier
     ) {
         composable(ROUT_ORDER) {
-            OderScreen(orderViewModel = orderViewModel, navController = navController)
+            OrderScreen(orderViewModel = orderViewModel, navController = navController)
         }
         composable(ROUT_SAVED) {
             SavedOrdersScreen(orderViewModel = orderViewModel, navController = navController)
@@ -61,6 +63,20 @@ fun AppNavHost(
         composable(ROUT_ADMIN_ORDERS) {
             AdminOrderConfirmationScreen(navController)
         }
+        composable(ROUT_ORDER_CONFIRMATION) {
+            OrderConfirmationScreen(
+                orderViewModel = OrderViewModel(),
+                navController = navController
+            )
+        }
+        composable(ROUT_SAVED_ORDERS) {
+            SaveOrderScreen2(
+                orderViewModel = OrderViewModel(),
+                navController = navController
+            )
+        }
+
+
         // Initialize Room Database and Repository for Authentication
         val appDatabase = UserDatabase.getDatabase(context)
         val authRepository = UserRepository(appDatabase.userDao())

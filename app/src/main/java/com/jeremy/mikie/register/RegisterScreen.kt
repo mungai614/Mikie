@@ -1,7 +1,5 @@
 package com.jeremy.mikie.register
 
-
-
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
@@ -9,7 +7,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -19,7 +16,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -32,7 +28,6 @@ import androidx.navigation.NavController
 import com.jeremy.mikie.R
 import com.jeremy.mikie.model.User
 import com.jeremy.mikie.navigation.ROUT_HOME
-import com.jeremy.mikie.navigation.ROUT_LOGIN
 import com.jeremy.mikie.navigation.ROUT_ORDER
 import com.jeremy.mikie.viewmodel.AuthViewModel
 
@@ -41,7 +36,7 @@ import com.jeremy.mikie.viewmodel.AuthViewModel
 fun RegisterScreen(
     authViewModel: AuthViewModel,
     navController: NavController,
-    onRegisterSuccess: () -> Unit
+    onRegisterSuccess: () -> Unit = {}
 ) {
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -49,6 +44,10 @@ fun RegisterScreen(
     var confirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
+    var role by remember { mutableStateOf("user") }
+    val roleOptions = listOf("user", "admin")
+    var expanded by remember { mutableStateOf(false) }
+
     val context = LocalContext.current
     val animatedAlpha by animateFloatAsState(
         targetValue = 1f,
@@ -63,7 +62,6 @@ fun RegisterScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(8.dp))
         AnimatedVisibility(visible = true, enter = fadeIn(), exit = fadeOut()) {
             Text(
                 "Create Your Account",
@@ -74,7 +72,7 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        //Username
+        // Username Field
         OutlinedTextField(
             value = username,
             onValueChange = { username = it },
@@ -82,13 +80,10 @@ fun RegisterScreen(
             leadingIcon = { Icon(Icons.Filled.Person, contentDescription = "Username Icon") },
             modifier = Modifier.fillMaxWidth()
         )
-        //End of username
-
-
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        //Email
+        // Email Field
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -97,16 +92,10 @@ fun RegisterScreen(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             modifier = Modifier.fillMaxWidth()
         )
-        //End of email
 
         Spacer(modifier = Modifier.height(8.dp))
 
-
-        //Role
-        var role by remember { mutableStateOf("user") }
-        val roleOptions = listOf("user", "admin")
-        var expanded by remember { mutableStateOf(false) }
-
+        // Role Dropdown
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = { expanded = !expanded }
@@ -123,25 +112,21 @@ fun RegisterScreen(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                roleOptions.forEach { selectionOption ->
+                roleOptions.forEach { selection ->
                     DropdownMenuItem(
-                        text = { Text(selectionOption) },
+                        text = { Text(selection) },
                         onClick = {
-                            role = selectionOption
+                            role = selection
                             expanded = false
                         }
                     )
                 }
             }
         }
-        //End of role
 
+        Spacer(modifier = Modifier.height(8.dp))
 
-
-
-
-
-        // Password Input Field with Show/Hide Toggle
+        // Password Field
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
@@ -149,9 +134,9 @@ fun RegisterScreen(
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = "Password Icon") },
             trailingIcon = {
-                val image = if (passwordVisible) painterResource(R.drawable.visibility)  else painterResource(R.drawable.visibilityoff)
+                val icon = if (passwordVisible) painterResource(R.drawable.visibility) else painterResource(R.drawable.visibilityoff)
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(image, contentDescription = if (passwordVisible) "Hide Password" else "Show Password")
+                    Icon(icon, contentDescription = if (passwordVisible) "Hide Password" else "Show Password")
                 }
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -160,7 +145,7 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Confirm Password Input Field with Show/Hide Toggle
+        // Confirm Password Field
         OutlinedTextField(
             value = confirmPassword,
             onValueChange = { confirmPassword = it },
@@ -168,17 +153,18 @@ fun RegisterScreen(
             visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = "Confirm Password Icon") },
             trailingIcon = {
-                val image = if (confirmPasswordVisible) painterResource(R.drawable.visibility)  else painterResource(R.drawable.visibilityoff)
+                val icon = if (confirmPasswordVisible) painterResource(R.drawable.visibility) else painterResource(R.drawable.visibilityoff)
                 IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
-                    Icon(image, contentDescription = if (confirmPasswordVisible) "Hide Password" else "Show Password")
+                    Icon(icon, contentDescription = if (confirmPasswordVisible) "Hide Password" else "Show Password")
                 }
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(5.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
+        // Register Button
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -193,13 +179,25 @@ fun RegisterScreen(
         ) {
             Button(
                 onClick = {
-                    if (username.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
-                        Toast.makeText(context, "All fields are required", Toast.LENGTH_SHORT).show()
-                    } else if (password != confirmPassword) {
-                        Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
-                    } else {
-                        authViewModel.registerUser(User(username = username, email = email, role = role, password = password))
-                        onRegisterSuccess()
+                    when {
+                        username.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank() -> {
+                            Toast.makeText(context, "All fields are required", Toast.LENGTH_SHORT).show()
+                        }
+                        password != confirmPassword -> {
+                            Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
+                        }
+                        else -> {
+                            val newUser = User(username = username, email = email, role = role, password = password)
+                            authViewModel.registerUser(newUser)
+                            onRegisterSuccess()
+
+                            // Navigate based on role
+                            if (role == "admin") {
+                                navController.navigate(ROUT_HOME) // Admin page
+                            } else {
+                                navController.navigate(ROUT_ORDER)  // User home page
+                            }
+                        }
                     }
                 },
                 modifier = Modifier.fillMaxSize(),
@@ -208,31 +206,5 @@ fun RegisterScreen(
                 Text("Register", color = Color.White)
             }
         }
-
-        Spacer(modifier = Modifier.height(5.dp))
-
-        Button(
-            onClick = {
-                if (username.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
-                    Toast.makeText(context, "All fields are required", Toast.LENGTH_SHORT).show()
-                } else if (password != confirmPassword) {
-                    Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
-                } else {
-                    authViewModel.registerUser(User(username = username, email = email, role = role, password = password))
-
-                    // Navigate based on role
-                    if (role == "admin") {
-                        navController.navigate(ROUT_HOME)  // Make sure this route is defined in NavHost
-                    } else {
-                        navController.navigate(ROUT_ORDER)        // Make sure this route is defined in NavHost
-                    }
-                }
-            },
-            modifier = Modifier.fillMaxSize(),
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
-        ) {
-            Text("Register", color = Color.White)
-        }
-
     }
 }

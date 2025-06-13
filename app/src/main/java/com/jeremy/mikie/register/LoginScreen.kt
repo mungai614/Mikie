@@ -1,20 +1,17 @@
 package com.jeremy.mikie.register
 
-
-
-
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -32,38 +29,41 @@ import com.jeremy.mikie.R
 import com.jeremy.mikie.navigation.ROUT_HOME
 import com.jeremy.mikie.navigation.ROUT_ORDER
 import com.jeremy.mikie.navigation.ROUT_REGISTER
-
 import com.jeremy.mikie.viewmodel.AuthViewModel
 
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     authViewModel: AuthViewModel,
     navController: NavController,
-    onLoginSuccess: () -> Unit
+    onLoginSuccess: () -> Unit = {}
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+
     val context = LocalContext.current
 
-    // Observe login logic
+    // Role selection state
+    val roles = listOf("user", "admin")
+    var selectedRole by remember { mutableStateOf(roles[0]) }
+    var expanded by remember { mutableStateOf(false) }
+
+    // Observe login result
     LaunchedEffect(authViewModel) {
         authViewModel.loggedInUser = { user ->
             if (user == null) {
                 Toast.makeText(context, "Invalid Credentials", Toast.LENGTH_SHORT).show()
             } else {
-                if (user.role == "admin") {
-                    navController.navigate(ROUT_ORDER) {
-                    }
-                } else {
-                    navController.navigate(ROUT_HOME) {
-                    }
+                // Navigate based on role
+                when (user.role) {
+                    "admin" -> navController.navigate(ROUT_ORDER)
+                    "user" -> navController.navigate(ROUT_HOME)
+                    else -> Toast.makeText(context, "Unknown role", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
-//End of login logic
 
     Column(
         modifier = Modifier
@@ -72,7 +72,7 @@ fun LoginScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Animated Welcome Text
+        // Welcome Title
         AnimatedVisibility(
             visible = true,
             enter = fadeIn(animationSpec = tween(1000)),
@@ -100,7 +100,7 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Password Input with Show/Hide Toggle
+        // Password Input
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
@@ -111,16 +111,49 @@ fun LoginScreen(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
             trailingIcon = {
-                val image = if (passwordVisible) painterResource(R.drawable.visibility) else painterResource(R.drawable.visibilityoff)
+                val icon = if (passwordVisible) painterResource(R.drawable.visibility) else painterResource(R.drawable.visibilityoff)
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(image, contentDescription = if (passwordVisible) "Hide Password" else "Show Password")
+                    Icon(icon, contentDescription = if (passwordVisible) "Hide Password" else "Show Password")
                 }
             }
         )
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Role Selection Dropdown
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = { expanded = !expanded }
+        ) {
+            OutlinedTextField(
+                readOnly = true,
+                value = selectedRole,
+                onValueChange = {},
+                label = { Text("Login as") },
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                roles.forEach { role ->
+                    DropdownMenuItem(
+                        text = { Text(role) },
+                        onClick = {
+                            selectedRole = role
+                            expanded = false
+                        }
+                    )
+                }
+            }
+        }
+
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Gradient Login Button
+        // Login Button
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -138,7 +171,7 @@ fun LoginScreen(
                     if (email.isBlank() || password.isBlank()) {
                         Toast.makeText(context, "Please enter email and password", Toast.LENGTH_SHORT).show()
                     } else {
-                        authViewModel.loginUser(email, password)
+                        authViewModel.loginUser(email, password, selectedRole)
                     }
                 },
                 modifier = Modifier.fillMaxSize(),
@@ -151,7 +184,7 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Register Navigation Button
+        // Register Navigation
         TextButton(onClick = { navController.navigate(ROUT_REGISTER) }) {
             Text("Don't have an account? Register")
         }
