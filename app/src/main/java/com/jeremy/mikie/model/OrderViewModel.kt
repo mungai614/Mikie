@@ -1,21 +1,28 @@
 package com.jeremy.mikie.model
 
-
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class OrderViewModel : ViewModel() {
+
     private val _selectedItems = MutableStateFlow<List<FoodItem>>(emptyList())
     val selectedItems: StateFlow<List<FoodItem>> = _selectedItems
 
-    fun addItem(item: FoodItem) {
-        if (!_selectedItems.value.contains(item)) {
-            _selectedItems.value = _selectedItems.value + item
-        }
+    private val _orders = MutableStateFlow<List<Order>>(emptyList())
+    val orders: StateFlow<List<Order>> = _orders
+
+    fun addItem(foodItem: FoodItem) {
+        _selectedItems.value = _selectedItems.value + foodItem
     }
 
-    fun clearOrder() {
+    fun saveOrder(name: String, contact: String, location: String) {
+        val newOrder = Order(name = name, contact = contact, location = location)
+        _orders.value = _orders.value + newOrder
+    }
+
+    fun clearOrders() {
+        _orders.value = emptyList()
         _selectedItems.value = emptyList()
     }
 }

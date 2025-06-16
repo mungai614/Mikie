@@ -8,12 +8,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.jeremy.mikie.model.OrderViewModel
-
+import com.jeremy.mikie.viewmodel.OrderViewModel2
 
 @Composable
-fun SavedOrdersScreen(orderViewModel: OrderViewModel, navController: NavController) {
-    val selectedItems by orderViewModel.selectedItems.collectAsState()
+fun SavedOrdersScreen(
+    orderViewModel2: OrderViewModel2,
+    navController: NavController
+) {
+    val selectedItems by orderViewModel2.selectedItems.collectAsState()
 
     Column(
         modifier = Modifier
@@ -24,14 +26,15 @@ fun SavedOrdersScreen(orderViewModel: OrderViewModel, navController: NavControll
         Spacer(modifier = Modifier.height(10.dp))
 
         if (selectedItems.isEmpty()) {
-            Text("No items ordered yet.")
+            Text("No items ordered yet.", fontSize = 18.sp)
         } else {
             selectedItems.forEach { item ->
                 Text("- ${item.name} (${item.price})", fontSize = 16.sp)
             }
 
             Spacer(modifier = Modifier.height(20.dp))
-            Button(onClick = { orderViewModel.clearOrder() }) {
+
+            Button(onClick = { orderViewModel2.clearOrder() }) {
                 Text("Clear Orders")
             }
         }

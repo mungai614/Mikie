@@ -5,10 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,15 +17,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.jeremy.mikie.R
 import com.jeremy.mikie.model.FoodItem
-import com.jeremy.mikie.model.OrderViewModel
-import com.jeremy.mikie.navigation.ROUT_ADMIN_ORDERS
-import com.jeremy.mikie.navigation.ROUT_HOME
-import com.jeremy.mikie.navigation.ROUT_ORDER
+import com.jeremy.mikie.viewmodel.OrderViewModel2
+import com.jeremy.mikie.navigation.ROUT_ORDER_CONFIRMATION
 import com.jeremy.mikie.navigation.ROUT_SAVED
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OrderScreen(orderViewModel: OrderViewModel, navController: NavController) {
+fun OrderScreen(orderViewModel2: OrderViewModel2, navController: NavController) {
     var selectedIndex by remember { mutableStateOf(0) }
 
     Scaffold(
@@ -41,7 +36,6 @@ fun OrderScreen(orderViewModel: OrderViewModel, navController: NavController) {
                 )
             )
         },
-
         bottomBar = {
             NavigationBar(containerColor = Color.Red) {
                 NavigationBarItem(
@@ -50,7 +44,7 @@ fun OrderScreen(orderViewModel: OrderViewModel, navController: NavController) {
                     selected = selectedIndex == 0,
                     onClick = {
                         selectedIndex = 0
-                        navController.navigate(ROUT_ORDER)
+                        navController.navigate("order")
                     }
                 )
                 NavigationBarItem(
@@ -68,21 +62,19 @@ fun OrderScreen(orderViewModel: OrderViewModel, navController: NavController) {
                     selected = selectedIndex == 2,
                     onClick = {
                         selectedIndex = 2
-                        navController.navigate(ROUT_HOME)
+                        navController.navigate("home")
                     }
                 )
             }
         },
-
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /* Add action if needed */ },
+                onClick = { /* Optional FAB action */ },
                 containerColor = Color.LightGray
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
         },
-
         content = { paddingValues ->
             Column(
                 modifier = Modifier
@@ -108,7 +100,10 @@ fun OrderScreen(orderViewModel: OrderViewModel, navController: NavController) {
                 foodItems.forEach { item ->
                     FoodItemCard(
                         item = item,
-                        onSelect = { orderViewModel.addItem(it) },
+                        onSelect = { selectedItem ->
+                            orderViewModel2.addItem(selectedItem)
+                            navController.navigate(ROUT_SAVED)
+                        },
                         navController = navController
                     )
                     Spacer(modifier = Modifier.height(10.dp))
@@ -116,9 +111,7 @@ fun OrderScreen(orderViewModel: OrderViewModel, navController: NavController) {
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                Button(onClick = {
-                    navController.navigate(ROUT_SAVED)
-                }) {
+                Button(onClick = { navController.navigate(ROUT_SAVED) }) {
                     Text("View Saved Orders")
                 }
             }
@@ -160,10 +153,12 @@ fun FoodItemCard(
 
             Button(onClick = {
                 onSelect(item)
-                navController.navigate(ROUT_ADMIN_ORDERS)
+                navController.navigate(ROUT_ORDER_CONFIRMATION)
             }) {
                 Text("Add")
             }
+
+
         }
     }
 }

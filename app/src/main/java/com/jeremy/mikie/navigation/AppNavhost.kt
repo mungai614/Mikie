@@ -1,6 +1,8 @@
 package com.jeremy.mikie.navigation
 
+import OrderConfirmationScreen
 import SaveOrderScreen2
+import SavedOrdersScreen3
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -18,15 +20,17 @@ import com.jeremy.mikie.register.RegisterScreen
 import com.jeremy.mikie.repository.UserRepository
 import com.jeremy.mikie.ui.screens.about.AboutScreen
 import com.jeremy.mikie.ui.screens.admin.AdminOrderConfirmationScreen
-import com.jeremy.mikie.ui.screens.admin.OrderConfirmationScreen
+
 
 import com.jeremy.mikie.ui.screens.home.HomeScreen
 import com.jeremy.mikie.ui.screens.order.OrderScreen
 
 
 import com.jeremy.mikie.ui.screens.saved.SavedOrdersScreen
+
 import com.jeremy.mikie.ui.screens.splash.SplashScreen
 import com.jeremy.mikie.viewmodel.AuthViewModel
+import com.jeremy.mikie.viewmodel.OrderViewModel2
 
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -38,6 +42,7 @@ fun AppNavHost(
 ) {
     val context = LocalContext.current
     val orderViewModel: OrderViewModel = viewModel()
+    val orderViewModel2: OrderViewModel2 = viewModel()
 
 
     NavHost(
@@ -46,11 +51,13 @@ fun AppNavHost(
         modifier = modifier
     ) {
         composable(ROUT_ORDER) {
-            OrderScreen(orderViewModel = orderViewModel, navController = navController)
+            OrderScreen(orderViewModel2 = orderViewModel2, navController = navController)
         }
+
         composable(ROUT_SAVED) {
-            SavedOrdersScreen(orderViewModel = orderViewModel, navController = navController)
+            SavedOrdersScreen(orderViewModel2 = orderViewModel2, navController = navController)
         }
+
         composable(ROUT_HOME) {
             HomeScreen(navController = navController)
         }
@@ -64,10 +71,7 @@ fun AppNavHost(
             AdminOrderConfirmationScreen(navController)
         }
         composable(ROUT_ORDER_CONFIRMATION) {
-            OrderConfirmationScreen(
-                orderViewModel = OrderViewModel(),
-                navController = navController
-            )
+            OrderConfirmationScreen(orderViewModel = orderViewModel, navController = navController)
         }
         composable(ROUT_SAVED_ORDERS) {
             SaveOrderScreen2(
@@ -75,6 +79,13 @@ fun AppNavHost(
                 navController = navController
             )
         }
+        composable(ROUT_SAVED_ORDER3) {
+            SavedOrdersScreen3(orderViewModel = orderViewModel, navController = navController)
+        }
+
+
+
+
 
 
         // Initialize Room Database and Repository for Authentication
