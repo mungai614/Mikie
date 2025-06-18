@@ -29,6 +29,7 @@ import com.jeremy.mikie.R
 import com.jeremy.mikie.navigation.ROUT_HOME
 import com.jeremy.mikie.navigation.ROUT_ORDER
 import com.jeremy.mikie.navigation.ROUT_REGISTER
+import com.jeremy.mikie.navigation.ROUT_SAVED_ORDER3
 import com.jeremy.mikie.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,7 +58,7 @@ fun LoginScreen(
             } else {
                 // Navigate based on role
                 when (user.role) {
-                    "admin" -> navController.navigate(ROUT_ORDER)
+                    "admin" -> navController.navigate(ROUT_SAVED_ORDER3)
                     "user" -> navController.navigate(ROUT_HOME)
                     else -> Toast.makeText(context, "Unknown role", Toast.LENGTH_SHORT).show()
                 }

@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.jeremy.mikie.model.OrderViewModel
+import com.jeremy.mikie.navigation.ROUT_ADMIN_ORDERS
 import com.jeremy.mikie.navigation.ROUT_SAVED_ORDER3
 
 @Composable
@@ -40,7 +41,7 @@ fun OrderConfirmationScreen(orderViewModel: OrderViewModel, navController: NavCo
         Button(
             onClick = {
                 orderViewModel.saveOrder(name, contact, location)
-                navController.navigate(ROUT_SAVED_ORDER3)
+                navController.navigate(ROUT_ADMIN_ORDERS)
             },
             enabled = isFormValid,
             modifier = Modifier.fillMaxWidth()

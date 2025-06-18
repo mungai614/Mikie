@@ -29,6 +29,7 @@ import com.jeremy.mikie.R
 import com.jeremy.mikie.model.User
 import com.jeremy.mikie.navigation.ROUT_HOME
 import com.jeremy.mikie.navigation.ROUT_ORDER
+import com.jeremy.mikie.navigation.ROUT_SAVED_ORDER3
 import com.jeremy.mikie.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -193,9 +194,9 @@ fun RegisterScreen(
 
                             // Navigate based on role
                             if (role == "admin") {
-                                navController.navigate(ROUT_HOME) // Admin page
+                                navController.navigate(ROUT_SAVED_ORDER3) // Admin page
                             } else {
-                                navController.navigate(ROUT_ORDER)  // User home page
+                                navController.navigate(ROUT_HOME)  // User home page
                             }
                         }
                     }

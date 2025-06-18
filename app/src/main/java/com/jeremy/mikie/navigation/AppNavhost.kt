@@ -15,11 +15,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.jeremy.mikie.data.UserDatabase
 import com.jeremy.mikie.model.OrderViewModel
+import com.jeremy.mikie.model.User
 import com.jeremy.mikie.register.LoginScreen
 import com.jeremy.mikie.register.RegisterScreen
 import com.jeremy.mikie.repository.UserRepository
 import com.jeremy.mikie.ui.screens.about.AboutScreen
 import com.jeremy.mikie.ui.screens.admin.AdminOrderConfirmationScreen
+
 
 
 import com.jeremy.mikie.ui.screens.home.HomeScreen
@@ -38,11 +40,12 @@ import com.jeremy.mikie.viewmodel.OrderViewModel2
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ROUT_ORDER
+    startDestination: String = ROUT_SPLASH
 ) {
     val context = LocalContext.current
     val orderViewModel: OrderViewModel = viewModel()
     val orderViewModel2: OrderViewModel2 = viewModel()
+
 
 
     NavHost(
@@ -82,6 +85,10 @@ fun AppNavHost(
         composable(ROUT_SAVED_ORDER3) {
             SavedOrdersScreen3(orderViewModel = orderViewModel, navController = navController)
         }
+
+
+
+
 
 
 
