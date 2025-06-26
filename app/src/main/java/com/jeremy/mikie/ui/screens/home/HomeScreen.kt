@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Card
@@ -50,6 +51,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.jeremy.mikie.navigation.ROUT_HOME
 import com.jeremy.mikie.R
+import com.jeremy.mikie.navigation.ROUT_ASSIST
 import com.jeremy.mikie.navigation.ROUT_ORDER
 import com.jeremy.mikie.navigation.ROUT_SAVED
 
@@ -111,13 +113,24 @@ fun HomeScreen(navController: NavController){
 
         //FloatingActionButton
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { /* Add action */ },
-                containerColor = Color.LightGray
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
+                FloatingActionButton(
+                    onClick = { navController.navigate(ROUT_ASSIST) },
+                    containerColor = Color.LightGray
+                ) {
+                    Icon(Icons.Default.Phone, contentDescription = "phone")
+                }
+                Spacer(modifier = Modifier.height(4.dp)) // Space between FAB and text
+                Text(
+                    text = "Help",
+                    color = Color.Blue,
+                    fontSize = 12.sp
+                )
             }
         },
+
         content = { paddingValues ->
             Column(
                 modifier = Modifier

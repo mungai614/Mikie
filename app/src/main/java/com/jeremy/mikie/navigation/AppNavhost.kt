@@ -21,10 +21,11 @@ import com.jeremy.mikie.register.RegisterScreen
 import com.jeremy.mikie.repository.UserRepository
 import com.jeremy.mikie.ui.screens.about.AboutScreen
 import com.jeremy.mikie.ui.screens.admin.AdminOrderConfirmationScreen
-
+import com.jeremy.mikie.ui.screens.assist.AssistScreen
 
 
 import com.jeremy.mikie.ui.screens.home.HomeScreen
+
 import com.jeremy.mikie.ui.screens.order.OrderScreen
 
 
@@ -40,7 +41,7 @@ import com.jeremy.mikie.viewmodel.OrderViewModel2
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ROUT_SPLASH
+    startDestination: String = ROUT_HOME
 ) {
     val context = LocalContext.current
     val orderViewModel: OrderViewModel = viewModel()
@@ -85,6 +86,12 @@ fun AppNavHost(
         composable(ROUT_SAVED_ORDER3) {
             SavedOrdersScreen3(orderViewModel = orderViewModel, navController = navController)
         }
+
+
+        composable(ROUT_ASSIST) {
+            AssistScreen(navController = navController)
+        }
+
 
 
 

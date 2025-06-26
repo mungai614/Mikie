@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 import com.jeremy.mikie.R
 import com.jeremy.mikie.model.FoodItem
 import com.jeremy.mikie.navigation.ROUT_ADMIN_ORDERS
+import com.jeremy.mikie.navigation.ROUT_ASSIST
 import com.jeremy.mikie.viewmodel.OrderViewModel2
 import com.jeremy.mikie.navigation.ROUT_ORDER_CONFIRMATION
 import com.jeremy.mikie.navigation.ROUT_SAVED
@@ -69,14 +70,25 @@ fun OrderScreen(orderViewModel2: OrderViewModel2, navController: NavController) 
             }
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { /* Optional FAB action */ },
-                containerColor = Color.LightGray
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
+                FloatingActionButton(
+                    onClick = { navController.navigate(ROUT_ASSIST) },
+                    containerColor = Color.LightGray
+                ) {
+                    Icon(Icons.Default.Phone, contentDescription = "phone")
+                }
+                Spacer(modifier = Modifier.height(4.dp)) // Space between FAB and text
+                Text(
+                    text = "Help",
+                    color = Color.Blue,
+                    fontSize = 12.sp
+                )
             }
         },
-        content = { paddingValues ->
+
+                content = { paddingValues ->
             Column(
                 modifier = Modifier
                     .padding(paddingValues)

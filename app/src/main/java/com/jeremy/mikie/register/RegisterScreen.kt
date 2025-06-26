@@ -32,6 +32,10 @@ import com.jeremy.mikie.navigation.ROUT_ORDER
 import com.jeremy.mikie.navigation.ROUT_SAVED_ORDER3
 import com.jeremy.mikie.viewmodel.AuthViewModel
 
+
+
+// ... (all your imports remain the same)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
@@ -45,16 +49,8 @@ fun RegisterScreen(
     var confirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
-    var role by remember { mutableStateOf("user") }
-    val roleOptions = listOf("user", "admin")
-    var expanded by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
-    val animatedAlpha by animateFloatAsState(
-        targetValue = 1f,
-        animationSpec = tween(durationMillis = 1500, easing = LinearEasing),
-        label = "Animated Alpha"
-    )
 
     Column(
         modifier = Modifier
@@ -63,17 +59,10 @@ fun RegisterScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        AnimatedVisibility(visible = true, enter = fadeIn(), exit = fadeOut()) {
-            Text(
-                "Create Your Account",
-                fontSize = 40.sp,
-                fontFamily = FontFamily.Cursive
-            )
-        }
+        Text("Create Your Account", fontSize = 40.sp, fontFamily = FontFamily.Cursive)
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Username Field
         OutlinedTextField(
             value = username,
             onValueChange = { username = it },
@@ -84,7 +73,6 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Email Field
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -96,38 +84,6 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Role Dropdown
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = !expanded }
-        ) {
-            OutlinedTextField(
-                value = role,
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("Select Role") },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier.menuAnchor().fillMaxWidth()
-            )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                roleOptions.forEach { selection ->
-                    DropdownMenuItem(
-                        text = { Text(selection) },
-                        onClick = {
-                            role = selection
-                            expanded = false
-                        }
-                    )
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Password Field
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
@@ -146,7 +102,6 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Confirm Password Field
         OutlinedTextField(
             value = confirmPassword,
             onValueChange = { confirmPassword = it },
@@ -165,7 +120,6 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Register Button
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -188,15 +142,16 @@ fun RegisterScreen(
                             Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
                         }
                         else -> {
-                            val newUser = User(username = username, email = email, role = role, password = password)
+                            // Only one admin email is allowed
+                            val resolvedRole = if (email == "admin@jeremy.com") "admin" else "user"
+                            val newUser = User(username = username, email = email, role = resolvedRole, password = password)
                             authViewModel.registerUser(newUser)
                             onRegisterSuccess()
 
-                            // Navigate based on role
-                            if (role == "admin") {
-                                navController.navigate(ROUT_SAVED_ORDER3) // Admin page
+                            if (resolvedRole == "admin") {
+                                navController.navigate(ROUT_SAVED_ORDER3)
                             } else {
-                                navController.navigate(ROUT_HOME)  // User home page
+                                navController.navigate(ROUT_HOME)
                             }
                         }
                     }
